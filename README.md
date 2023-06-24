@@ -19,5 +19,5 @@ Inventarium es una aplicación para la gestión de inventarios. Permite realizar
 
 1. Clona este repositorio:
 
-git clone https://github.com/tu-usuario/inventarium.git
+git clone https://github.com/An3ramirez/inventarium.git
 
