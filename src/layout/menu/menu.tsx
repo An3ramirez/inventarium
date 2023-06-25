@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import {
-  ContainerOutlined,
-  DesktopOutlined,
+  OrderedListOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  PieChartOutlined,
+  AuditOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Button, Menu } from 'antd';
@@ -29,9 +28,8 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('Option 3', '3', <ContainerOutlined />),
+  getItem('Empresas', '1', <AuditOutlined />),
+  getItem('Inventario', '2', <OrderedListOutlined />)
 ];
 
 const CustomMenu: React.FC = () => {

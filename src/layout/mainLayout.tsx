@@ -1,27 +1,10 @@
 import React, { useState } from 'react';
-import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout, theme } from 'antd';
 import CustomMenu from './menu/menu';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
-
 type MainLayoutProps = {children: React.ReactNode;};
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -35,6 +18,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
         <div className="demo-logo-vertical" />
         <CustomMenu/>
       </Sider>
+
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: '0 16px' }}>
@@ -42,6 +26,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             <Breadcrumb.Item>User</Breadcrumb.Item>
             <Breadcrumb.Item>Bill</Breadcrumb.Item>
           </Breadcrumb>
+
           <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
             {children}
           </div>
