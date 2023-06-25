@@ -7,7 +7,7 @@ interface CompanyListProps {
   companies: Company[];
   onCreate: () => void;
   onUpdate: (empresa: Company) => void;
-  onDelete: (id: number) => void;
+  onDelete: (nit: number) => void;
   loading: boolean;
 }
 
@@ -56,7 +56,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
           <Button
             type="primary"
             icon={<DeleteOutlined />}
-            onClick={() => onDelete(empresa.id)}
+            onClick={() => onDelete(empresa.nit)}
             disabled={loading}
             loading={loading}
             danger
@@ -75,7 +75,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
           Crear Empresa
         </Button>
       </div>
-      <Table columns={columns} dataSource={companies} rowKey="id" />
+      <Table columns={columns} dataSource={companies} rowKey="nit" />
     </div>
   );
 };

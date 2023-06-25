@@ -63,13 +63,13 @@ const CompanyContainer: React.FC = () => {
   const handleUpdate = (company: Company) => {
     setLoading(true);
     axios
-      .put(`${domain}/company/${company.id}`, company, {
+      .put(`${domain}/company/${company.nit}`, company, {
         headers: {
           'Authorization': 'Bearer ' + token,
         }
       })
       .then(() => {
-        setCompanies(companies.map((c) => (c.id === company.id ? company : c)));
+        setCompanies(companies.map((c) => (c.nit === company.nit ? company : c)));
         message.success('Empresa actualizada exitosamente');
       })
       .catch((error) => {
@@ -81,16 +81,16 @@ const CompanyContainer: React.FC = () => {
       });
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (nit: number) => {
     setLoading(true);
     axios
-      .delete(`${domain}/company/${id}`, {
+      .delete(`${domain}/company/${nit}`, {
         headers: {
           'Authorization': 'Bearer ' + token,
         }
       })
       .then(() => {
-        setCompanies(companies.filter((c) => c.id !== id));
+        setCompanies(companies.filter((c) => c.nit !== nit));
         message.success('Empresa eliminada exitosamente');
       })
       .catch((error) => {
@@ -104,7 +104,7 @@ const CompanyContainer: React.FC = () => {
 
   const handleSave = (company: Company) => {
     if (selectedCompany) {
-      handleUpdate({ ...company, id: selectedCompany.id });
+      handleUpdate({ ...company, nit: selectedCompany.nit });
       setSelectedCompany(null);
     } else {
       handleCreate(company);

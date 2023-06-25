@@ -37,6 +37,7 @@ const LoginContainer = (props: any) => {
 
       //Se guarda el token
       localStorage.setItem('token', response.data.access_token);
+      localStorage.setItem('rol_user', response.data.role.code);
 
       navigate('/company-list');
     } catch (error) {

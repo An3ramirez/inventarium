@@ -19,10 +19,9 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
 }) => {
   const [form] = Form.useForm();
   const emptyCompany: Company = {
-    id: 0,
+    nit: 0,
     legal_name: '',
     address: '',
-    nit: '',
     phone: ''
   };
 

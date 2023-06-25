@@ -1,7 +1,6 @@
 export interface Company {
-    id: number;
-    legal_name: string;
-    address: string;
-    nit: string;
-    phone: string;
-  }
+  nit: number;
+  legal_name: string;
+  address: string;
+  phone: string;
+}

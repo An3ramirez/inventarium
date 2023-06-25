@@ -10,7 +10,8 @@ const InventoryContainer: React.FC = () => {
   const [selectedInventory, setSelectedInventory] = useState<Inventory | null>(null);
   const [inventories, setInventories] = useState<Inventory[]>([]);
   const [loading, setLoading] = useState(false); // Estado para indicar si se está realizando una solicitud
-  const domain = process.env.DOMAIN;
+  const domain = process.env.REACT_APP_DOMAIN;
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     fetchProducts();
@@ -19,7 +20,11 @@ const InventoryContainer: React.FC = () => {
   const fetchProducts = () => {
     setLoading(true);
     axios
-      .get(domain + '/comany')
+      .get(domain + '/product', {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+      })
       .then((response) => {
         setInventories(response.data);
       })
@@ -35,7 +40,11 @@ const InventoryContainer: React.FC = () => {
   const handleCreate = (inventory: Inventory) => {
     setLoading(true);
     axios
-      .post(domain + '/company', inventory)
+      .post(domain + '/product', inventory, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+      })
       .then((response) => {
         setInventories([...inventories, response.data]);
         message.success('Empresa creada exitosamente');
@@ -52,7 +61,11 @@ const InventoryContainer: React.FC = () => {
   const handleUpdate = (inventory: Inventory) => {
     setLoading(true);
     axios
-      .put(`${domain}/invetary/${inventory.id}`, inventory)
+      .put(`${domain}/product/${inventory.id}`, inventory, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+      })
       .then(() => {
         setInventories(inventories.map((c) => (c.id === inventory.id ? inventory : c)));
         message.success('Empresa actualizada exitosamente');
@@ -69,7 +82,11 @@ const InventoryContainer: React.FC = () => {
   const handleDelete = (id: number) => {
     setLoading(true);
     axios
-      .delete(`/api/companies/${id}`)
+      .delete(`${domain}/product/${id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+      })
       .then(() => {
         setInventories(inventories.filter((c) => c.id !== id));
         message.success('Empresa eliminada exitosamente');
