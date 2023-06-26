@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Button, DividerProps } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined, ApiFilled } from '@ant-design/icons';
 import { Company } from '../types';
-import { RolUser} from '../../login/types';
+import {checkAdmin} from '../../../utils/constants';
 
 interface CompanyListProps {
   companies: Company[];
@@ -19,7 +19,9 @@ const CompanyList: React.FC<CompanyListProps> = ({
   onDelete,
   loading,
 }) => {
-  const isAdmin: boolean = localStorage.getItem('rol_user') == RolUser.ADMIN_USER;
+  let rolUser = localStorage.getItem('rol_user');
+  let asAdminRol = checkAdmin(rolUser);
+
   const columns = [
     {
       title: 'Nombre',
@@ -51,7 +53,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
             icon={<EditOutlined />}
             onClick={() => onUpdate(empresa)}
             style={{ marginRight: 8 }}
-            disabled={loading || !isAdmin}
+            disabled={loading || !asAdminRol}
           >
             Editar
           </Button>
@@ -59,7 +61,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
             type="primary"
             icon={<DeleteOutlined />}
             onClick={() => onDelete(empresa.nit)}
-            disabled={loading || !isAdmin}
+            disabled={loading || !asAdminRol}
             loading={loading}
             danger
           >
@@ -73,7 +75,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
-        <Button type="primary" icon={<PlusOutlined />} onClick={onCreate} disabled={!isAdmin}>
+        <Button type="primary" icon={<PlusOutlined />} onClick={onCreate} disabled={!asAdminRol}>
           Crear Empresa
         </Button>
       </div>

@@ -8,7 +8,7 @@ import MainLayout from '../layout/mainLayout';
 // Importa los containers
 const LoginContainer = lazy(() => import('./login/loginContainer'));
 const CompanyContainer = lazy(() => import('./company/containers/companyContainer'));
-const InventoryContainer = lazy(() => import('./inventory/containers/inventoryContainer'));
+const InventoryContainer = lazy(() => import('./products/containers/productContainer'));
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);

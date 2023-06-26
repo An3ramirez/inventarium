@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Button, InputNumber } from 'antd';
-import { Inventory } from '../types';
+import { ProductEnum } from '../types';
 
-interface CompanyFormProps {
+interface ProductFormProps {
     open: boolean;
     onCancel: () => void;
-    onSave: (values: Inventory) => void;
-    initialValues?: Inventory | null;
+    onSave: (values: ProductEnum) => void;
+    initialValues?: ProductEnum | null;
     loading: boolean;
 }
 
-const InventoryForm: React.FC<CompanyFormProps> = ({
+const ProductForm: React.FC<ProductFormProps> = ({
     open,
     onCancel,
     onSave,
@@ -18,7 +18,7 @@ const InventoryForm: React.FC<CompanyFormProps> = ({
     loading,
 }) => {
     const [form] = Form.useForm();
-    const emptyCompany: Inventory = {
+    const emptyProduct: ProductEnum = {
         id: 0,
         name: '',
         description: '',
@@ -30,7 +30,7 @@ const InventoryForm: React.FC<CompanyFormProps> = ({
         if (initialValues) {
             form.setFieldsValue(initialValues);
         } else {
-            form.setFieldsValue(emptyCompany);
+            form.setFieldsValue(emptyProduct);
         }
     }, [form, initialValues]);
 
@@ -82,4 +82,4 @@ const InventoryForm: React.FC<CompanyFormProps> = ({
     );
 };
 
-export default InventoryForm;
+export default ProductForm;

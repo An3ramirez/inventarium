@@ -1,4 +1,6 @@
 export const RolUser = {
     EXTERNAL_USER: 'EXTERNAL_USER',
     ADMIN_USER: 'ADMIN_USER',
-} as const;
+}
+
+export let checkAdmin: Function = (role: string) => role  == RolUser.ADMIN_USER;

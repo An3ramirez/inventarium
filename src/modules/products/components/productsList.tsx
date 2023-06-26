@@ -1,65 +1,69 @@
 import React from 'react';
 import { Table, Button } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined, DownloadOutlined } from '@ant-design/icons';
-import { Inventory } from '../types';
+import { ProductEnum } from '../types';
+import {checkAdmin} from '../../../utils/constants';
 
-interface InventoryListProps {
-  inventories: Inventory[];
+interface ProductListProps {
+  products: ProductEnum[];
   onDownloadPDF: () => void;
   onCreate: () => void;
-  onUpdate: (empresa: Inventory) => void;
+  onUpdate: (product: ProductEnum) => void;
   onDelete: (id: number) => void;
   loading: boolean;
 }
 
-const InventoryList: React.FC<InventoryListProps> = ({
-  inventories,
+const ProductList: React.FC<ProductListProps> = ({
+  products,
   onDownloadPDF,
   onCreate,
   onUpdate,
   onDelete,
   loading,
 }) => {
+  let rolUser = localStorage.getItem('rol_user');
+  let asAdminRol = checkAdmin(rolUser);
+
   const columns = [
     {
       title: 'Nombre',
-      dataIndex: 'nombre',
+      dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Dirección',
-      dataIndex: 'direccion',
-      key: 'address',
+      title: 'Descripción',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
-      title: 'NIT',
-      dataIndex: 'nit',
-      key: 'nit',
+      title: 'Precio',
+      dataIndex: 'price',
+      key: 'price',
     },
     {
-      title: 'Teléfono',
-      dataIndex: 'telefono',
-      key: 'tel',
+      title: 'Cantidad',
+      dataIndex: 'quantity',
+      key: 'quantity',
     },
     {
       title: 'Acciones',
       key: 'actions',
-      render: (_: any, empresa: any) => (
+      render: (_: any, product: any) => (
         <div>
           <Button
             type="primary"
             icon={<EditOutlined />}
-            onClick={() => onUpdate(empresa)}
+            onClick={() => onUpdate(product)}
             style={{ marginRight: 8 }}
-            disabled={loading}
+            disabled={loading || !asAdminRol}
           >
             Editar
           </Button>
           <Button
             type="primary"
             icon={<DeleteOutlined />}
-            onClick={() => onDelete(empresa.id)}
-            disabled={loading}
+            onClick={() => onDelete(product.id)}
+            disabled={loading || !asAdminRol}
             loading={loading}
             danger
           >
@@ -69,6 +73,8 @@ const InventoryList: React.FC<InventoryListProps> = ({
       ),
     },
   ];
+
+  
   
   return (
     <div>
@@ -77,13 +83,13 @@ const InventoryList: React.FC<InventoryListProps> = ({
           Descargar PDF
         </Button>
 
-        <Button type="primary" icon={<PlusOutlined />} onClick={onCreate}>
+        <Button type="primary" icon={<PlusOutlined />} onClick={onCreate} disabled={!asAdminRol}>
           Crear Producto
         </Button>
       </div>
-      <Table columns={columns} dataSource={inventories} rowKey="id" />
+      <Table columns={columns} dataSource={products} rowKey="id" />
     </div>
   );
 };
 
-export default InventoryList;
+export default ProductList;

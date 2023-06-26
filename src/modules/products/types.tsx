@@ -1,4 +1,4 @@
-export interface Inventory {
+export interface ProductEnum {
     id: number;
     name: string;
     price: number | null;

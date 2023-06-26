@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import {
   OrderedListOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   AuditOutlined,
+  AppstoreOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Button, Menu } from 'antd';
-import './menu.css';
 import { useNavigate } from 'react-router-dom';
+import './menu.css';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -32,18 +31,12 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem('Empresas', '1', <AuditOutlined />),
-  getItem('Inventario', '2', <OrderedListOutlined />)
+  getItem('Inventario', '2', <OrderedListOutlined />),
+  getItem('cerrar sesión', '3', <AppstoreOutlined />)
 ];
-
-
 
 const CustomMenu: React.FC = () => {
   let navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
-
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
 
   const onChange: MenuProps['onClick'] = (e) => {
     console.log('click ', e);
@@ -53,7 +46,11 @@ const CustomMenu: React.FC = () => {
         break;
       case '2':
         navigate('/inventory-list');
-        break;  
+        break;
+      case '3':
+        localStorage.clear();
+        navigate('/sign-in');
+        break;
       default:
         break;
     }
@@ -61,15 +58,10 @@ const CustomMenu: React.FC = () => {
 
   return (
     <div className='menu-container'>
-      <Button type="primary" onClick={toggleCollapsed} style={{ marginBottom: 16 }}>
-        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-      </Button>
       <Menu
         defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
         mode="inline"
         theme="dark"
-        inlineCollapsed={collapsed}
         items={items}
         onClick={onChange}
       />

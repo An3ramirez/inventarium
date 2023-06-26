@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { message } from 'antd';
-import InventoryForm from '../components/inventoryForm';
-import InventoryList from '../components/inventoryList';
-import { Inventory } from '../types';
+import ProductForm from '../components/productsForm';
+import ProductList from '../components/productsList';
+import { ProductEnum } from '../types';
 import axios from 'axios';
 
-const InventoryContainer: React.FC = () => {
+const ProductContainer: React.FC = () => {
   const [visible, setVisible] = useState(false);
-  const [selectedInventory, setSelectedInventory] = useState<Inventory | null>(null);
-  const [inventories, setInventories] = useState<Inventory[]>([]);
-  const [loading, setLoading] = useState(false); // Estado para indicar si se está realizando una solicitud
+  const [selectedProduct, setSelectedProduct] = useState<ProductEnum | null>(null);
+  const [products, setProducts] = useState<ProductEnum[]>([]);
+  const [loading, setLoading] = useState(false);
   const domain = process.env.REACT_APP_DOMAIN + '/product';
   const token = localStorage.getItem('token');
 
@@ -26,7 +26,7 @@ const InventoryContainer: React.FC = () => {
         }
       })
       .then((response) => {
-        setInventories(response.data);
+        setProducts(response.data);
       })
       .catch((error) => {
         message.error('Error al obtener las empresas');
@@ -37,16 +37,16 @@ const InventoryContainer: React.FC = () => {
       });
   };
 
-  const handleCreate = (inventory: Inventory) => {
+  const handleCreate = (product: ProductEnum) => {
     setLoading(true);
     axios
-      .post(domain, inventory, {
+      .post(domain, product, {
         headers: {
           'Authorization': 'Bearer ' + token,
         }
       })
       .then((response) => {
-        setInventories([...inventories, response.data]);
+        setProducts([...products, response.data]);
         message.success('Empresa creada exitosamente');
       })
       .catch((error) => {
@@ -58,16 +58,16 @@ const InventoryContainer: React.FC = () => {
       });
   };
 
-  const handleUpdate = (inventory: Inventory) => {
+  const handleUpdate = (product: ProductEnum) => {
     setLoading(true);
     axios
-      .put(`${domain}/${inventory.id}`, inventory, {
+      .put(`${domain}/${product.id}`, product, {
         headers: {
           'Authorization': 'Bearer ' + token,
         }
       })
       .then(() => {
-        setInventories(inventories.map((c) => (c.id === inventory.id ? inventory : c)));
+        setProducts(products.map((c) => (c.id === product.id ? product : c)));
         message.success('Empresa actualizada exitosamente');
       })
       .catch((error) => {
@@ -88,7 +88,7 @@ const InventoryContainer: React.FC = () => {
         }
       })
       .then(() => {
-        setInventories(inventories.filter((c) => c.id !== id));
+        setProducts(products.filter((c) => c.id !== id));
         message.success('Empresa eliminada exitosamente');
       })
       .catch((error) => {
@@ -124,10 +124,10 @@ const InventoryContainer: React.FC = () => {
       });
   }
 
-  const handleSave = (inventory: Inventory) => {
-    if (selectedInventory) {
-      handleUpdate({ ...inventory, id: selectedInventory.id });
-      setSelectedInventory(null);
+  const handleSave = (inventory: ProductEnum) => {
+    if (selectedProduct) {
+      handleUpdate({ ...inventory, id: selectedProduct.id });
+      setSelectedProduct(null);
     } else {
       handleCreate(inventory);
     }
@@ -136,27 +136,27 @@ const InventoryContainer: React.FC = () => {
 
   return (
     <div>
-      <InventoryList
-        inventories={inventories}
+      <ProductList
+        products={products}
         onDownloadPDF={handleDownloadPDF}
         onCreate={() => setVisible(true)}
         onUpdate={(inventory) => {
-          setSelectedInventory(inventory);
+          setSelectedProduct(inventory);
           setVisible(true);
         }}
         onDelete={handleDelete}
         loading={loading}
       />
 
-      <InventoryForm
+      <ProductForm
         open={visible}
         onCancel={() => setVisible(false)}
         onSave={handleSave}
-        initialValues={selectedInventory}
+        initialValues={selectedProduct}
         loading={loading}
       />
     </div>
   );
 };
 
-export default InventoryContainer;
+export default ProductContainer;
