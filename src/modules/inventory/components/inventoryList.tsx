@@ -1,10 +1,11 @@
 import React from 'react';
 import { Table, Button } from 'antd';
-import { DeleteOutlined, EditOutlined, PlusOutlined, ApiFilled } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 import { Inventory } from '../types';
 
 interface InventoryListProps {
   inventories: Inventory[];
+  onDownloadPDF: () => void;
   onCreate: () => void;
   onUpdate: (empresa: Inventory) => void;
   onDelete: (id: number) => void;
@@ -13,6 +14,7 @@ interface InventoryListProps {
 
 const InventoryList: React.FC<InventoryListProps> = ({
   inventories,
+  onDownloadPDF,
   onCreate,
   onUpdate,
   onDelete,
@@ -71,6 +73,10 @@ const InventoryList: React.FC<InventoryListProps> = ({
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
+        <Button type="link" icon={<DownloadOutlined />} onClick={onDownloadPDF}>
+          Descargar PDF
+        </Button>
+
         <Button type="primary" icon={<PlusOutlined />} onClick={onCreate}>
           Crear Producto
         </Button>

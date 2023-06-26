@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { message } from 'antd';
-import axios from 'axios';
 import InventoryForm from '../components/inventoryForm';
 import InventoryList from '../components/inventoryList';
 import { Inventory } from '../types';
+import axios from 'axios';
 
 const InventoryContainer: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState<Inventory | null>(null);
   const [inventories, setInventories] = useState<Inventory[]>([]);
   const [loading, setLoading] = useState(false); // Estado para indicar si se está realizando una solicitud
-  const domain = process.env.REACT_APP_DOMAIN;
+  const domain = process.env.REACT_APP_DOMAIN + '/product';
   const token = localStorage.getItem('token');
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const InventoryContainer: React.FC = () => {
   const fetchProducts = () => {
     setLoading(true);
     axios
-      .get(domain + '/product', {
+      .get(domain, {
         headers: {
           'Authorization': 'Bearer ' + token,
         }
@@ -40,7 +40,7 @@ const InventoryContainer: React.FC = () => {
   const handleCreate = (inventory: Inventory) => {
     setLoading(true);
     axios
-      .post(domain + '/product', inventory, {
+      .post(domain, inventory, {
         headers: {
           'Authorization': 'Bearer ' + token,
         }
@@ -61,7 +61,7 @@ const InventoryContainer: React.FC = () => {
   const handleUpdate = (inventory: Inventory) => {
     setLoading(true);
     axios
-      .put(`${domain}/product/${inventory.id}`, inventory, {
+      .put(`${domain}/${inventory.id}`, inventory, {
         headers: {
           'Authorization': 'Bearer ' + token,
         }
@@ -82,7 +82,7 @@ const InventoryContainer: React.FC = () => {
   const handleDelete = (id: number) => {
     setLoading(true);
     axios
-      .delete(`${domain}/product/${id}`, {
+      .delete(`${domain}/${id}`, {
         headers: {
           'Authorization': 'Bearer ' + token,
         }
@@ -100,6 +100,30 @@ const InventoryContainer: React.FC = () => {
       });
   };
 
+  const handleDownloadPDF = () => {
+    setLoading(true);
+    axios
+      .get(domain + '/download', {
+        headers: { 'Authorization': 'Bearer ' + token },
+        responseType: 'blob',
+      })
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'products.pdf');
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((error) => {
+        message.error('Error al descargar el archivo');
+        console.error('Error al descargar el archivo:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
   const handleSave = (inventory: Inventory) => {
     if (selectedInventory) {
       handleUpdate({ ...inventory, id: selectedInventory.id });
@@ -114,6 +138,7 @@ const InventoryContainer: React.FC = () => {
     <div>
       <InventoryList
         inventories={inventories}
+        onDownloadPDF={handleDownloadPDF}
         onCreate={() => setVisible(true)}
         onUpdate={(inventory) => {
           setSelectedInventory(inventory);
