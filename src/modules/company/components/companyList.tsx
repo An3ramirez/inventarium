@@ -20,7 +20,6 @@ const CompanyList: React.FC<CompanyListProps> = ({
   loading,
 }) => {
   const isAdmin: boolean = localStorage.getItem('rol_user') == RolUser.ADMIN_USER;
-  console.log('is admin ', isAdmin);
   const columns = [
     {
       title: 'Nombre',

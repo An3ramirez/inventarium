@@ -11,7 +11,6 @@ const CompanyContainer: React.FC = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(false); // Estado para indicar si se está realizando una solicitud
   const domain = process.env.REACT_APP_DOMAIN;
-  console.log(domain);
   const token = localStorage.getItem('token');
 
   useEffect(() => {

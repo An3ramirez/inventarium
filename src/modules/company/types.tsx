@@ -1,5 +1,5 @@
 export interface Company {
-  nit: number;
+  nit: number | null;
   legal_name: string;
   address: string;
   phone: string;
