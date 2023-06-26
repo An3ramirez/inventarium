@@ -8,8 +8,11 @@ import {
 import type { MenuProps } from 'antd';
 import { Button, Menu } from 'antd';
 import './menu.css';
+import { useNavigate } from 'react-router-dom';
 
 type MenuItem = Required<MenuProps>['items'][number];
+
+
 
 function getItem(
   label: React.ReactNode,
@@ -32,11 +35,28 @@ const items: MenuItem[] = [
   getItem('Inventario', '2', <OrderedListOutlined />)
 ];
 
+
+
 const CustomMenu: React.FC = () => {
+  let navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
+  };
+
+  const onChange: MenuProps['onClick'] = (e) => {
+    console.log('click ', e);
+    switch (e.key) {
+      case '1':
+        navigate('/company-list');
+        break;
+      case '2':
+        navigate('/inventory-list');
+        break;  
+      default:
+        break;
+    }
   };
 
   return (
@@ -51,6 +71,7 @@ const CustomMenu: React.FC = () => {
         theme="dark"
         inlineCollapsed={collapsed}
         items={items}
+        onClick={onChange}
       />
     </div>
   );
