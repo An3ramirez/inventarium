@@ -3,18 +3,22 @@ import { message } from 'antd';
 import ProductForm from '../components/productsForm';
 import ProductList from '../components/productsList';
 import { ProductEnum } from '../types';
+import { Company } from '../../company/types';
 import axios from 'axios';
 
 const ProductContainer: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductEnum | null>(null);
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [products, setProducts] = useState<ProductEnum[]>([]);
   const [loading, setLoading] = useState(false);
+  const patchCompany = process.env.REACT_APP_DOMAIN + '/company';
   const domain = process.env.REACT_APP_DOMAIN + '/product';
   const token = localStorage.getItem('token');
 
   useEffect(() => {
     fetchProducts();
+    fetchCompanies();
   }, []);
 
   const fetchProducts = () => {
@@ -26,7 +30,32 @@ const ProductContainer: React.FC = () => {
         }
       })
       .then((response) => {
-        setProducts(response.data);
+        const data = response.data.map((elem: any) => {
+          const { company, ...data }: any = elem;
+          return { ...data, company_id: company?.nit }
+        });
+
+        setProducts(data);
+      })
+      .catch((error) => {
+        message.error('Error al obtener las empresas');
+        console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const fetchCompanies = () => {
+    setLoading(true);
+    axios
+      .get(patchCompany, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+      })
+      .then((response) => {
+        setCompanies(response.data);
       })
       .catch((error) => {
         message.error('Error al obtener las empresas');
@@ -47,7 +76,7 @@ const ProductContainer: React.FC = () => {
       })
       .then((response) => {
         setProducts([...products, response.data]);
-        message.success('Empresa creada exitosamente');
+        message.success('Producto creada exitosamente');
       })
       .catch((error) => {
         message.error('Error al crear la empresa');
@@ -68,7 +97,7 @@ const ProductContainer: React.FC = () => {
       })
       .then(() => {
         setProducts(products.map((c) => (c.id === product.id ? product : c)));
-        message.success('Empresa actualizada exitosamente');
+        message.success('Producto actualizada exitosamente');
       })
       .catch((error) => {
         message.error('Error al actualizar la empresa');
@@ -89,7 +118,7 @@ const ProductContainer: React.FC = () => {
       })
       .then(() => {
         setProducts(products.filter((c) => c.id !== id));
-        message.success('Empresa eliminada exitosamente');
+        message.success('Producto eliminada exitosamente');
       })
       .catch((error) => {
         message.error('Error al eliminar la empresa');
@@ -154,6 +183,7 @@ const ProductContainer: React.FC = () => {
         onSave={handleSave}
         initialValues={selectedProduct}
         loading={loading}
+        companies={companies}
       />
     </div>
   );

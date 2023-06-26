@@ -1,25 +1,31 @@
 import React, { useEffect } from 'react';
-import { Modal, Form, Input, Button, InputNumber } from 'antd';
+import { Modal, Form, Input, Button, InputNumber, Select } from 'antd';
 import { ProductEnum } from '../types';
+import { Company } from '../../company/types';
 
 interface ProductFormProps {
     open: boolean;
     onCancel: () => void;
     onSave: (values: ProductEnum) => void;
     initialValues?: ProductEnum | null;
+    companies: Company[];
     loading: boolean;
 }
+
+const { Option } = Select;
 
 const ProductForm: React.FC<ProductFormProps> = ({
     open,
     onCancel,
     onSave,
     initialValues,
+    companies,
     loading,
 }) => {
     const [form] = Form.useForm();
     const emptyProduct: ProductEnum = {
         id: 0,
+        company_id: null,
         name: '',
         description: '',
         price: null,
@@ -48,6 +54,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
             callback();
         }
     };
+    console.log('initial: ', initialValues);
 
     return (
         <Modal
@@ -65,6 +72,13 @@ const ProductForm: React.FC<ProductFormProps> = ({
             ]}
         >
             <Form form={form} layout="vertical" initialValues={initialValues ?? {}} style={{ maxWidth: 600 }}>
+                <Form.Item name="company_id" label="Empresa" rules={[{ required: true, message: 'Seleccione una empresa' }]}>
+                    <Select placeholder="Seleccione una empresa" disabled={initialValues != null}>
+                        {companies.map((compnay) => (
+                            <Option key={compnay.nit} value={compnay.nit}>{compnay.legal_name}</Option>
+                        ))}
+                    </Select>
+                </Form.Item>
                 <Form.Item name="name" label="Nombre" rules={[{ required: true }]}>
                     <Input />
                 </Form.Item>
